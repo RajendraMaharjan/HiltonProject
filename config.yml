@@ -1,8 +1,23 @@
+#logging:
+#  level: INFO
+#  loggers:
+#    level: INFO
+#    additive: false
+#    appenders:
+#      "io.dropwizard": INFO
+#      "org.hibernate.SQL":
+#        - type: file
+#          currentLogFilename: ./log/mylogger.log
+#          archivedLogFilenamePattern: ./log/mylogger-%d.log.gz
+#          archivedFileCount: 5
+
+
 logging:
   level: INFO
   loggers:
-    "mylogger":
-      level: DEBUG
+    "io.dropwizard": INFO
+    "org.hibernate.SQL":
+      level: INFO
       additive: false
       appenders:
         - type: file

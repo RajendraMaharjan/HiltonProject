@@ -12,11 +12,15 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.client.Client;
 
 public class HiltonProjectApplication extends Application<HiltonProjectConfiguration> {
     private static final String SQL = "sql";
+
+    Logger logger = Logger.getLogger(HiltonProjectApplication.class.getSimpleName());
 
     public static void main(final String[] args) throws Exception {
         new HiltonProjectApplication().run(args);
@@ -38,6 +42,8 @@ public class HiltonProjectApplication extends Application<HiltonProjectConfigura
                     final Environment env) {
         // TODO: implement application
 
+        logger.info("runing block");
+
 
 //        // Datasource configuration
 //        final DataSource dataSource = conf.getDataSourceFactory().build(env.metrics(), SQL);
@@ -47,6 +53,7 @@ public class HiltonProjectApplication extends Application<HiltonProjectConfigura
         final Client client = new JerseyClientBuilder(env)
                 .using(conf.getJerseyClientConfiguration())
                 .build(getName());
+
         final CacheConfigManager cacheConfigManager = CacheConfigManager.getCacheConfigManager();
         final GeoLocationDAO geoLocationDAO = new GeoLocationDAO(hibernate.getSessionFactory());
         final GeoLocationServiceImpl geoLocationService = new GeoLocationServiceImpl(geoLocationDAO, client);

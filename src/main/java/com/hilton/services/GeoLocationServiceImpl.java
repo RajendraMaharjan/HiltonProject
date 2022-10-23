@@ -6,16 +6,16 @@ import com.hilton.db.GeoLocationDAO;
 import com.hilton.errors.GeoLocationNotFoundException;
 import com.hilton.services.adapters.GeoLocationMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Slf4j
 public class GeoLocationServiceImpl implements GeoLocationService {
 
+    Logger logger = LoggerFactory.getLogger(GeoLocationServiceImpl.class.getSimpleName());
     private final String IP_API_URL = "http://ip-api.com/json/";
     private final GeoLocationDAO geoLocationDAO;
 
@@ -27,17 +27,24 @@ public class GeoLocationServiceImpl implements GeoLocationService {
     }
 
     @Override
-    public String saveGeoLocation(GeoLocation geoLocation) {
-        return geoLocationDAO.recordGeoLocation(geoLocation);
+    public GeoLocationDTO saveGeoLocation(GeoLocation geoLocation) {
+        logger.info("saveGeoLocation => GeoLocation Saved.");
+        return GeoLocationMapper
+                .getGeoLocationDTOFromGeoLocation(geoLocationDAO.recordGeoLocation(geoLocation));
     }
 
     @Override
     public void updateGeoLocation(GeoLocation geoLocation) {
+        logger.info("updateGeoLocation => GeoLocation Updated.");
+
+        //Currently updateGeoLocation is returning Object, cast is by checking instanceof if needed
         geoLocationDAO.updateGeoLocation(geoLocation);
     }
 
     @Override
     public GeoLocationDTO getGeoLocationFromAPI(String query) {
+        logger.info("GeoLocation searching from API or data source.");
+
         GeoLocationDTO glDTO = null;
         try {
             glDTO = getGeroLocationFromDataSource(query);
@@ -84,20 +91,22 @@ public class GeoLocationServiceImpl implements GeoLocationService {
             }
 
         } catch (Exception e) {
-            log.error("Exception occured @getGeoLocationFromAPI => " + e.getMessage());
+            logger.error("Exception occured @getGeoLocationFromAPI => " + e.getMessage());
         }
         return glDTO;
     }
 
     @Override
     public GeoLocationDTO getGeroLocationFromDataSource(String query) throws GeoLocationNotFoundException {
+        logger.info("GeoLocation searching from data source.");
+
         Optional<GeoLocation> geoLocation = geoLocationDAO.findByQuery(query);
 
         if (geoLocation.isPresent()) {
-            log.info("GeoLocation is found in the Data Source.");
+            logger.info("GeoLocation is found in the Data Source.");
             return GeoLocationMapper.getGeoLocationDTOFromGeoLocation(geoLocation.get());
         } else {
-            log.info("GeoLocation is missing in Data Source.");
+            logger.info("GeoLocation is missing in Data Source.");
 //            throw new GeoLocationNotFoundException("GeoLocation is missing in Data Source.");
             return null;
         }

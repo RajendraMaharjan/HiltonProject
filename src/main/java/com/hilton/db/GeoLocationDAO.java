@@ -15,8 +15,8 @@ public class GeoLocationDAO extends AbstractDAO<GeoLocation> {
         return Optional.ofNullable(get(query));
     }
 
-    public String recordGeoLocation(GeoLocation geoLocation) {
-        return persist(geoLocation).getQuery();
+    public GeoLocation recordGeoLocation(GeoLocation geoLocation) {
+        return persist(geoLocation);
     }
 
     public Object updateGeoLocation(GeoLocation geoLocation) {

@@ -5,6 +5,8 @@ import com.hilton.core.dto.GeoLocationDTO;
 import org.modelmapper.ModelMapper;
 
 public class GeoLocationMapper {
+    private GeoLocationMapper() {
+    }
 
     static ModelMapper modelMapper;
 

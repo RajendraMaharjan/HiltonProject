@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,13 +41,14 @@ public class GeoLocationResource {
     @Path(value = "/{query}")
     @UnitOfWork
     public Response queryGeoLocation(@NotNull
+                                     @Pattern(regexp = IPV4_PATTERN, message = "=> Please try with a valid IP address; similar to IP Address xx.xx.xx.xx ")
                                      @PathParam("query") String query) {
-        logger.info("HELLO ------------------------ LOG CHECK");
+        logger.info("HELLO queryGeoLocation------------------------ LOG CHECK");
 
-        /// TODO: 22/10/2022 DO IP FILTERING FOR QUERY
-        if (query.matches(IPV4_PATTERN)) {
-
-        }
+//        /// TODO: 22/10/2022 DO IP FILTERING FOR QUERY
+//        if (query.matches(IPV4_PATTERN)) {
+//
+//        }
 
 //        GeoLocationDTO geoLocationDTO = geoLocationService.getGeoLocationFromAPI(query);
         GeoLocationDTO geoLocationDTO = CacheConfigManager
@@ -55,7 +57,8 @@ public class GeoLocationResource {
 
 
         if (geoLocationDTO != null) {
-            return Response.ok(geoLocationDTO)
+            return Response
+                    .ok(geoLocationDTO)
                     .build();
         } else {
             DefaultResponse res = new DefaultResponse();
@@ -74,10 +77,20 @@ public class GeoLocationResource {
     public Response createGeoLocation(@NotNull
                                       @Valid GeoLocationDTO geoLocationDTO) {
 
-        geoLocationService
+        GeoLocationDTO geoLocationDTO1 = geoLocationService
                 .saveGeoLocation(GeoLocationMapper.getGeoLocationFromGeoLocationDTO(geoLocationDTO));
-
-        return Response.ok(geoLocationService.getGeoLocationFromAPI(geoLocationDTO.getQuery()))
-                .build();
+        if (geoLocationDTO1 != null) {
+            return Response
+                    .ok(geoLocationDTO1)
+                    .build();
+        } else {
+            DefaultResponse res = new DefaultResponse();
+            res.setMessage("GeoLocation details failed to save.");
+            res.setStatus(Response.Status.INTERNAL_SERVER_ERROR);
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(res)
+                    .build();
+        }
     }
 }

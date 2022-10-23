@@ -6,12 +6,15 @@ import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import com.hilton.core.dto.GeoLocationDTO;
 import com.hilton.services.GeoLocationServiceImpl;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class CacheConfigManager {
+
+    Logger logger = LoggerFactory.getLogger(CacheConfigManager.class.getSimpleName());
+
     private CacheConfigManager() {
     }
 
@@ -28,6 +31,8 @@ public class CacheConfigManager {
 
     public void initGeoLocationCache(GeoLocationServiceImpl geoLocationService) {
         if (guavaLocCache == null) {
+            logger.info("initGeoLocationCache guavaLocCache.");
+
             guavaLocCache = CacheBuilder
                     .newBuilder()
                     .concurrencyLevel(10)
@@ -45,10 +50,10 @@ public class CacheConfigManager {
 
     public GeoLocationDTO getGeoLocationDataFromCache(String key) {
         try {
-            log.info("CacheStats => ", guavaLocCache.stats());
+            logger.info("getGeoLocationDataFromCache CacheStats => ", guavaLocCache.stats());
             return guavaLocCache.get(key);
         } catch (Exception e) {
-            log.error("Guava GeoLocation Cache retrieval failed." + e.getMessage());
+            logger.error("Guava GeoLocation Cache retrieval failed." + e.getMessage());
             e.printStackTrace();
         }
         return null;
