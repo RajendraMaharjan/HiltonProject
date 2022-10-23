@@ -7,6 +7,8 @@ import com.hilton.errors.GeoLocationNotFoundException;
 public interface GeoLocationService {
     String saveGeoLocation(GeoLocation geoLocation);
 
+    void updateGeoLocation(GeoLocation geoLocation);
+
     GeoLocationDTO getGeoLocationFromAPI(String query);
 
     GeoLocationDTO getGeroLocationFromDataSource(String query) throws GeoLocationNotFoundException;

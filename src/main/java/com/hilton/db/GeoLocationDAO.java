@@ -12,10 +12,14 @@ public class GeoLocationDAO extends AbstractDAO<GeoLocation> {
     }
 
     public Optional<GeoLocation> findByQuery(String query) {
-        return Optional.of(get(query));
+        return Optional.ofNullable(get(query));
     }
 
     public String recordGeoLocation(GeoLocation geoLocation) {
         return persist(geoLocation).getQuery();
+    }
+
+    public Object updateGeoLocation(GeoLocation geoLocation) {
+       return currentSession().merge(geoLocation);
     }
 }
