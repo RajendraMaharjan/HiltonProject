@@ -6,7 +6,6 @@ import com.hilton.core.dto.GeoLocationDTO;
 import com.hilton.db.GeoLocationDAO;
 import com.hilton.errors.GeoLocationNotFoundException;
 import com.hilton.services.adapters.GeoLocationMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
     @Override
     public GeoLocationDTO saveGeoLocation(GeoLocation geoLocation) {
         logger.info("saveGeoLocation => GeoLocation Saved.");
-        return new GeoLocationMapper()
+        return geoLocationMapper
                 .getGeoLocationDTOFromGeoLocation(geoLocationDAO.recordGeoLocation(geoLocation));
     }
 
@@ -73,7 +72,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
 
                     //Session ISSUE
                     //updateAndCreated time is handled by  hibernate tags
-                    updateGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(glDTO));
+                    updateGeoLocation(geoLocationMapper.getGeoLocationFromGeoLocationDTO(glDTO));
 
                 }
             } else {
@@ -83,7 +82,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
                         .readEntity(GeoLocationDTO.class);
 
                 //updateAndCreated time is handled by  hibernate tags
-                saveGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(glDTO));
+                saveGeoLocation(geoLocationMapper.getGeoLocationFromGeoLocationDTO(glDTO));
             }
 
             //for showing created and updated time to user response //as NUll is appearing
