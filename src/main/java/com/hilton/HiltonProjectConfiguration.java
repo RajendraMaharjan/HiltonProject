@@ -11,6 +11,17 @@ import javax.validation.constraints.*;
 
 public class HiltonProjectConfiguration extends Configuration {
     // TODO: implement service configuration
+
+    private static String test;
+
+    public static String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
+    }
+
     @Valid
     private PooledDataSourceFactory dbFactory = new DataSourceFactory();
 

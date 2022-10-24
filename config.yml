@@ -1,16 +1,4 @@
-#logging:
-#  level: INFO
-#  loggers:
-#    level: INFO
-#    additive: false
-#    appenders:
-#      "io.dropwizard": INFO
-#      "org.hibernate.SQL":
-#        - type: file
-#          currentLogFilename: ./log/mylogger.log
-#          archivedLogFilenamePattern: ./log/mylogger-%d.log.gz
-#          archivedFileCount: 5
-
+test: "Hello"
 
 logging:
   level: INFO
@@ -24,8 +12,22 @@ logging:
           currentLogFilename: ./log/mylogger.log
           archivedLogFilenamePattern: ./log/mylogger-%d.log.gz
           archivedFileCount: 5
-  appenders:
-    - type: console
+
+
+#logging:
+#  level: INFO
+#  loggers:
+#    "io.dropwizard": INFO
+#    "org.hibernate.SQL":
+#      level: INFO
+#      additive: false
+#      appenders:
+#        - type: file
+#          currentLogFilename: ./log/mylogger.log
+#          archivedLogFilenamePattern: ./log/mylogger-%d.log.gz
+#          archivedFileCount: 5
+#  appenders:
+#    - type: console
 
 database:
   driverClass: com.mysql.cj.jdbc.Driver

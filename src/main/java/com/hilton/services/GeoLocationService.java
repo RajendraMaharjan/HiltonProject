@@ -12,4 +12,6 @@ public interface GeoLocationService {
     GeoLocationDTO getGeoLocationFromAPI(String query);
 
     GeoLocationDTO getGeroLocationFromDataSource(String query) throws GeoLocationNotFoundException;
+
+    GeoLocationDTO loadGeoLocationFromCache(String query);
 }

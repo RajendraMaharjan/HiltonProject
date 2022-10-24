@@ -16,6 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class GeoLocation {
 
     @Id

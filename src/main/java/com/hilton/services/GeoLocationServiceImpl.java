@@ -1,5 +1,6 @@
 package com.hilton.services;
 
+import com.hilton.cache.CacheConfigManager;
 import com.hilton.core.GeoLocation;
 import com.hilton.core.dto.GeoLocationDTO;
 import com.hilton.db.GeoLocationDAO;
@@ -18,6 +19,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
     Logger logger = LoggerFactory.getLogger(GeoLocationServiceImpl.class.getSimpleName());
     private final String IP_API_URL = "http://ip-api.com/json/";
     private final GeoLocationDAO geoLocationDAO;
+    private GeoLocationMapper geoLocationMapper = new GeoLocationMapper();
 
     private Client client;
 
@@ -29,7 +31,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
     @Override
     public GeoLocationDTO saveGeoLocation(GeoLocation geoLocation) {
         logger.info("saveGeoLocation => GeoLocation Saved.");
-        return GeoLocationMapper
+        return new GeoLocationMapper()
                 .getGeoLocationDTOFromGeoLocation(geoLocationDAO.recordGeoLocation(geoLocation));
     }
 
@@ -71,7 +73,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
 
                     //Session ISSUE
                     //updateAndCreated time is handled by  hibernate tags
-                    updateGeoLocation(GeoLocationMapper.getGeoLocationFromGeoLocationDTO(glDTO));
+                    updateGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(glDTO));
 
                 }
             } else {
@@ -81,7 +83,7 @@ public class GeoLocationServiceImpl implements GeoLocationService {
                         .readEntity(GeoLocationDTO.class);
 
                 //updateAndCreated time is handled by  hibernate tags
-                saveGeoLocation(GeoLocationMapper.getGeoLocationFromGeoLocationDTO(glDTO));
+                saveGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(glDTO));
             }
 
             //for showing created and updated time to user response //as NUll is appearing
@@ -104,12 +106,19 @@ public class GeoLocationServiceImpl implements GeoLocationService {
 
         if (geoLocation.isPresent()) {
             logger.info("GeoLocation is found in the Data Source.");
-            return GeoLocationMapper.getGeoLocationDTOFromGeoLocation(geoLocation.get());
+            return geoLocationMapper.getGeoLocationDTOFromGeoLocation(geoLocation.get());
         } else {
             logger.info("GeoLocation is missing in Data Source.");
 //            throw new GeoLocationNotFoundException("GeoLocation is missing in Data Source.");
             return null;
         }
+    }
+
+    @Override
+    public GeoLocationDTO loadGeoLocationFromCache(String query) {
+        return CacheConfigManager
+                .getCacheConfigManager()
+                .getGeoLocationDataFromCache(query);
     }
 
 }

@@ -51,10 +51,7 @@ public class GeoLocationResource {
 //        }
 
 //        GeoLocationDTO geoLocationDTO = geoLocationService.getGeoLocationFromAPI(query);
-        GeoLocationDTO geoLocationDTO = CacheConfigManager
-                .getCacheConfigManager()
-                .getGeoLocationDataFromCache(query);
-
+        GeoLocationDTO geoLocationDTO = geoLocationService.loadGeoLocationFromCache(query);
 
         if (geoLocationDTO != null) {
             return Response
@@ -78,7 +75,7 @@ public class GeoLocationResource {
                                       @Valid GeoLocationDTO geoLocationDTO) {
 
         GeoLocationDTO geoLocationDTO1 = geoLocationService
-                .saveGeoLocation(GeoLocationMapper.getGeoLocationFromGeoLocationDTO(geoLocationDTO));
+                .saveGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(geoLocationDTO));
         if (geoLocationDTO1 != null) {
             return Response
                     .ok(geoLocationDTO1)

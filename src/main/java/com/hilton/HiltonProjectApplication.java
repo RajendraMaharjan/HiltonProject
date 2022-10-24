@@ -42,22 +42,21 @@ public class HiltonProjectApplication extends Application<HiltonProjectConfigura
                     final Environment env) {
         // TODO: implement application
 
-        logger.info("runing block");
-
+//        logger.info("runing block");
+//        System.out.println(HiltonProjectConfiguration.getTest());
 
 //        // Datasource configuration
 //        final DataSource dataSource = conf.getDataSourceFactory().build(env.metrics(), SQL);
 //        DBI dbi = new DBI(dataSource);
 
-
         final Client client = new JerseyClientBuilder(env)
                 .using(conf.getJerseyClientConfiguration())
                 .build(getName());
 
-        final CacheConfigManager cacheConfigManager = CacheConfigManager.getCacheConfigManager();
         final GeoLocationDAO geoLocationDAO = new GeoLocationDAO(hibernate.getSessionFactory());
         final GeoLocationServiceImpl geoLocationService = new GeoLocationServiceImpl(geoLocationDAO, client);
 
+        final CacheConfigManager cacheConfigManager = CacheConfigManager.getCacheConfigManager();
         cacheConfigManager.initGeoLocationCache(geoLocationService);
 //        cacheConfigManager.test(geoLocationService);
 
