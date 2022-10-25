@@ -26,6 +26,7 @@ public class GeoLocationResource {
     private static final String IPV4_PATTERN =
             "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
     private GeoLocationServiceImpl geoLocationService;
+    private GeoLocationMapper geoLocationMapper = new GeoLocationMapper();
 
     public GeoLocationResource(GeoLocationServiceImpl geoLocationService) {
         this.geoLocationService = geoLocationService;
@@ -75,7 +76,7 @@ public class GeoLocationResource {
                                       @Valid GeoLocationDTO geoLocationDTO) {
 
         GeoLocationDTO geoLocationDTO1 = geoLocationService
-                .saveGeoLocation(new GeoLocationMapper().getGeoLocationFromGeoLocationDTO(geoLocationDTO));
+                .saveGeoLocation(geoLocationMapper.getGeoLocationFromGeoLocationDTO(geoLocationDTO));
         if (geoLocationDTO1 != null) {
             return Response
                     .ok(geoLocationDTO1)
